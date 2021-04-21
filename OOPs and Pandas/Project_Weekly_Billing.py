@@ -23,7 +23,8 @@ class Project():
         return(barG.plot(kind='bar', cmap='Accent'))
 
 
-df = pd.read_csv("timesheet.csv")
+df = pd.read_csv(r"OOPs and Pandas\timesheet.csv")
+# df = pd.read_csv("timesheet.csv")
 
 df = df.dropna(how='all', axis='rows')
 df = df.dropna(how='all', axis='columns')
@@ -42,9 +43,11 @@ print('Employees:', pyTips.employee)
 print('Tags:', pyTips.tags)
 print('Billing Amount in USR:', pyTips.billing_amt_in_USR)
 print('Billing Amount i INR:', pyTips.billing_amt_in_INR)
-print(pyTips.total_hrs_spent)
-print(pyTips.calculate_activity_summary())
-print(pyTips.calculate_employee_summary())
-# print(pyTips.)
+print('Total hours spent:', pyTips.total_hrs_spent)
+print('Calculate activity summary (Tag vs Employee):\n',
+      pyTips.calculate_activity_summary())
+print('Calculate Employee summary (Employee vs Hours spent):\n',
+      pyTips.calculate_employee_summary())
+print('Employee vs Billing (Bar Graph):')
 pyTips.display_bar_chart()
 plt.show()
