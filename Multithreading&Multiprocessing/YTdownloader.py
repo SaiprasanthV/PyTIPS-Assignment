@@ -14,53 +14,53 @@
 # except Exception as e:
 #     print(e)
 
-from pyyoutube import Api
+
 from pytube import YouTube
-from threading import Thread
+import logging
+import threading
+import time
+
+file_size = 0
 
 
-def threading():
-    # Call download_videos function
-    t1 = Thread(target=download_videos)
-    t1.start()
+def complete_func(stream, file_handle):
+    print('Video downloaded successfully !')
 
 
-def download_videos():
-    # Create API Object
-    api = Api(api_key='Enter API Key')
-
-    if "youtube" in playlistId:
-        playlist_id = playlistId[len(
-            "https://www.youtube.com/playlist?list="):]
+def show_progress_bar(chunk, file_handle, bytes_remaining):
+    global file_size
+    if file_size == 0:
+        file_size = bytes_remaining
     else:
-        playlist_id = playlistId
+        r = float(file_size - bytes_remaining)
+        print(str(round(r/float(file_size)*100, 0)) + '% of video downloaded')
 
-    print(playlist_id)
-    # Get list of video links
-    playlist_item_by_id = api.get_playlist_items(
-        playlist_id=playlist_id, count=None, return_json=True)
 
-    # Iterate through all video links
-    for index, videoid in enumerate(playlist_item_by_id['items']):
-
-        print(index, '-----', videoid)
-
-        link = f"https://www.youtube.com/watch?v={videoid['contentDetails']['videoId']}"
-
-        yt_obj = YouTube(link)
-
-        filters = yt_obj.streams.filter(progressive=True, file_extension='mp4')
-
-        # download the highest quality video
-        filters.get_highest_resolution().download()
-
-        print(f"Downloaded:- {link}")
-
-    print("Success, Video Successfully downloaded")
+def thread_function(url):
+    logging.info("Thread %s: starting", url)
+    yt = YouTube(url)
+    print('Going to download:', yt.title)
+    yt.register_on_progress_callback(show_progress_bar)
+    yt.register_on_complete_callback(complete_func)
+    yt.streams.filter(progressive=True).first().download()
+    logging.info("Thread %s: finishing", url)
 
 
 if __name__ == "__main__":
+    format = "%(asctime)s: %(message)s"
+    logging.basicConfig(format=format, level=logging.INFO,
+                        datefmt="%H:%M:%S")
 
-    playlistId = 'https://www.youtube.com/playlist?list=PL-FbhHsDM2qH4JS70UuUxa4lVJZn4bsLD'
+    YT_url_list = ['https://www.youtube.com/watch?v=qiwBjYhQ_-c&list=PL-FbhHsDM2qH4JS70UuUxa4lVJZn4bsLD&index=4',
+                   'https://www.youtube.com/watch?v=movsj_dyrOQ&list=PL-FbhHsDM2qH4JS70UuUxa4lVJZn4bsLD&index=6']
 
-    threading()
+    for url in YT_url_list:
+        # print('url=  ', url)
+
+        logging.info("Main    : before creating thread")
+        x = threading.Thread(target=thread_function, args=(url,))
+        logging.info("Main    : before running thread")
+        x.start()
+        logging.info("Main    : wait for the thread to finish")
+        # x.join()
+        logging.info("Main    : all done")
