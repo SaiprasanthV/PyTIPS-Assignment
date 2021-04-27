@@ -6,9 +6,42 @@
   <body>
     <h1>File Upload</h1>
     <form method="POST" action="" enctype="multipart/form-data">
-      <p><input type="file" name="file"></p>
-      <p><input type="submit" value="Submit"></p>
+      <div>
+        <p><input type="file" name="file"></p>
+        <p><input type="submit" name="Submit" value="Submit"></p>
+      </div>
+
+      <div>
+        <p><input type="submit" name="Size" value="Size"> </p>
+        {% if size %}
+        <h3> {{size}}</h3>
+        {% else%}
+        <h3> See the File size here </h3>
+        {% endif %}
+      </div>
+
+      <div>
+        <p><input type="submit" name="Date_Modified" value="Date Modified"></p>
+        {% if mdate %}
+        <h3> {{mdate}}</h3>
+        {% else%}
+        <h3> See the Date Modified here </h3>
+        {% endif %}        
+      </div>
+
+      <div>
+        <p><input type="submit" name="No_of_line" value="No of line"></p>
+        {% if n_lines %}
+        <h3> {{n_lines}}</h3>
+        {% else%}
+        <h3> See the No of line here </h3>
+        {% endif %}        
+      </div>
+
     </form>
+
+
+
     <hr>
     {% for file in files %}
       <img src="{{ url_for('upload', filename=file) }}" style="width: 64px">
