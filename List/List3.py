@@ -1,6 +1,13 @@
 def is_palindrome(string):
-    if(string==string[::-1]):
+    '''
+    arg -> string
+    return -> returns True if it is a palindrome
+            else False
+    '''
+    if(string == string[::-1]):
         return(True)
     return(False)
 
-print(is_palindrome('radar'))
+
+string = 'radar'
+print('Check Palindrome for ', string, ':', is_palindrome(string))

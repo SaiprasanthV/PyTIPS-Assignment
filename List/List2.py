@@ -1,4 +1,10 @@
 def reverse(string):
+    '''
+    arg -> string
+    return -> reverse of string
+    '''
     return(string[::-1])
 
-print(reverse('I am testing'))
+
+string = 'I am testing'
+print('Reverse of String  ', string, 'is  ', reverse(string))
