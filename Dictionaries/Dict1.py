@@ -1,10 +1,17 @@
-def translate(Eng_L):
-    Swe_L=[]
-    d={"merry":"god", "christmas":"jul", "and":"och", "happy":"gott", "new":"nytt","year":"år"}
-    for Eng_W in Eng_L:
-        Swe_L.append(d[Eng_W])
-    return Swe_L
+def translate(English_list):
+    '''
+    arg -> English_list
+    return -> converts English words into Swedish words and returns them as a list
+    '''
+    Swedish_list = []
+    dictionary = {"merry": "god", "christmas": "jul",
+                  "and": "och", "happy": "gott", "new": "nytt", "year": "år"}
+    for English_word in English_list:
+        Swedish_list.append(dictionary[English_word])
+    return Swedish_list
 
-Eng_L=['merry','christmas','and','happy','new','year']
-Swe_L=translate(Eng_L)
-print(Swe_L)
+
+English_list = ['merry', 'christmas', 'and', 'happy', 'new', 'year']
+Swedish_list = translate(English_list)
+print('Convert these English words', English_list,
+      'into Swedish words:', Swedish_list)

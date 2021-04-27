@@ -1,8 +1,14 @@
-def char_freq(st1):
-    d=dict()
-    for ch1 in st1:
-        d[ch1]=d.get(ch1,0)+1
-    print (d)
+def character_frequency(string):
+    '''
+    arg -> string
+    print -> prints the frequency of character in the string
+    '''
+    dictionary = dict()
+    print('Frequency of Characters:')
+    for letter in string:
+        dictionary[letter] = dictionary.get(letter, 0)+1
+    print(dictionary)
 
-st1="abbabcbdbabdbdbabababcbcbab"
-char_freq(st1)
+
+string = "abbabcbdbabdbdbabababcbcbab"
+character_frequency(string)
