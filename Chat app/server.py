@@ -7,6 +7,7 @@ PORT = 9090
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
 
+# waiting for connection signal from client
 server.listen()
 
 clients = []
@@ -14,11 +15,13 @@ nicknames = []
 
 
 def broadcast(message):
+    '''broadcasts the message to all clients'''
     for client in clients:
         client.send(message)
 
 
 def handle(client):
+    '''closes the clients if exception occured, else it calls broadcast functions'''
     while True:
         try:
             message = client.recv(1024)
@@ -27,6 +30,7 @@ def handle(client):
 
         except:
             index = clients.index(client)
+            # removes the client and its name from respective lists
             clients.pop(index)
             client.close()
             nicknames.pop(index)
@@ -39,7 +43,8 @@ def receive():
         print(f"Connected with {str(address)}!!")
 
         client.send("NICK".encode('utf-8'))
-        nickname = client.recv(1024)
+        # recieves the name for client
+        nickname = client.recv(1024).decode('utf-8')
 
         nicknames.append(nickname)
         clients.append(client)
