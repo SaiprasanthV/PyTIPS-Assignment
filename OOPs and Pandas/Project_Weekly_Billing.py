@@ -24,7 +24,35 @@ class Project():
 
     def display_bar_chart(self):
         barG = df.groupby('User').agg({'Billing Amount in INR': 'sum'})
-        return(barG.plot(kind='bar', cmap='Accent'))
+        return(barG.plot(kind='bar', cmap='Accent', rot=10))
+        # plt.figure(figsize=(15, 4))
+        # plt.bar(list(barG['User']), list(barG['Billing Amount in INR']))
+        # plt.xticks(rotation=0)
+        # plt.show()
+
+
+class Employee():
+    def __init__(self, df):
+        '''
+        arg -> dataframe (df)
+        task -> calculates multiple summary reports
+        '''
+        self.df = df
+        self.projects = df['Project Name'].unique()
+        self.tags = df.Tag.unique()
+        self.billing_amt_in_USR = df['Billing Amount in USD'].sum()
+        self.billing_amt_in_INR = df['Billing Amount in INR'].sum()
+        self.total_hrs_spent = df['Hours(For Calculation)'].sum()
+
+    def calculate_activity_summary(self):
+        return(pd.pivot_table(df, index=['Tag'], columns='Project Name', values="Hours(For Calculation)", aggfunc=np.sum))
+
+    def calculate_project_summary(self):
+        return(df.groupby('Project Name').agg({'Hours(For Calculation)': 'sum'}))
+
+    def display_bar_chart(self):
+        barG = df.groupby('Project Name').agg({'Billing Amount in INR': 'sum'})
+        return(barG.plot(kind='bar', cmap='Accent', rot=0))
 
 
 # reading csv file
@@ -52,16 +80,103 @@ df['Hours(For Calculation)'] = pd.to_numeric(df['Hours(For Calculation)'])
 
 print(df)
 
-pyTips = Project(df)
-print('Employees:', pyTips.employee)
-print('Tags:', pyTips.tags)
-print('Billing Amount in USR:', pyTips.billing_amt_in_USR)
-print('Billing Amount i INR:', pyTips.billing_amt_in_INR)
-print('Total hours spent:', pyTips.total_hrs_spent)
-print('Calculate activity summary (Tag vs Employee):\n',
-      pyTips.calculate_activity_summary())
-print('Calculate Employee summary (Employee vs Hours spent):\n',
-      pyTips.calculate_employee_summary())
-print('Employee vs Billing (Bar Graph):')
-pyTips.display_bar_chart()
-plt.show()
+
+def project_or_employee_selection():
+    print(''' What do you want to look ? -  Projects / Employees
+          Type '1' for "Projects",
+          Type '2' for "Employees"
+          Type 'q' to Quit''')
+    class_selected = input()
+    if (class_selected == '1' or class_selected == '2'):
+        return(class_selected)
+
+    elif (class_selected == 'q'):
+        print('System is going to Exit !!')
+        exit()
+
+    else:
+        print('Enter a Valid number!!')
+        return(project_or_employee_selection())
+
+
+def project_name():
+    print('Kindly Enter the name of the project you want to know!')
+    project_names = df["Project Name"].unique()
+    print(project_names, sep="\n")
+    print('Note: Type "q" to quit')
+    project_name_x = input()
+
+    if project_name_x in project_names:
+        return(project_name_x)
+
+    elif (project_name_x == 'q'):
+        print('System is going to Exit !!')
+        exit()
+
+    else:
+        print('Enter Valid Project Name:')
+        return(project_name())
+
+
+def employee_name():
+    print('Kindly Enter the name of the Employee you want to know!')
+    employee_names = df["User"].unique()
+    print(employee_names, sep="\n")
+    print('Note: Type "q" to quit')
+    employee_name_x = input()
+
+    if employee_name_x in employee_names:
+        return(employee_name_x)
+
+    elif (employee_name_x == 'q'):
+        print('System is going to Exit !!')
+        exit()
+
+    else:
+        print('Enter Valid Employee Name:')
+        return(employee_name())
+
+
+def cm_to_inch(value):
+    return value/2.54
+
+
+if __name__ == '__main__':
+
+    project_or_employee = project_or_employee_selection()
+    if (project_or_employee == '1'):
+        project = project_name()
+        df = df.loc[df["Project Name"] == project]
+        py_Project = Project(df)
+        print('Employees:', py_Project.employee)
+        print('Tags:', py_Project.tags)
+        print('Billing Amount in USR: $', py_Project.billing_amt_in_USR)
+        print('Billing Amount in INR: Rs.', py_Project.billing_amt_in_INR)
+        print('Total hours spent:', py_Project.total_hrs_spent, 'hrs')
+        print('Calculate activity summary (Tag vs Employee):\n',
+              py_Project.calculate_activity_summary())
+        print('Calculate Employee summary (Employee vs Hours spent):\n',
+              py_Project.calculate_employee_summary())
+        print('Employee vs Billing (Bar Graph):')
+        py_Project.display_bar_chart()
+        # plt.figure(figsize=(cm_to_inch(25), cm_to_inch(15)))
+        plt.show()
+
+    elif (project_or_employee == '2'):
+        employee = employee_name()
+        df = df.loc[df["User"] == employee]
+        py_Employee = Employee(df)
+        print('Employees:', py_Employee.projects)
+        print('Tags:', py_Employee.tags)
+        print('Billing Amount in USR: $', py_Employee.billing_amt_in_USR)
+        print('Billing Amount in INR: Rs.', py_Employee.billing_amt_in_INR)
+        print('Total hours spent:', py_Employee.total_hrs_spent, 'hrs')
+        print('Calculate activity summary (Tag vs Employee):\n',
+              py_Employee.calculate_activity_summary())
+        print('Calculate Employee summary (Employee vs Hours spent):\n',
+              py_Employee.calculate_project_summary())
+        print('Employee vs Billing (Bar Graph):')
+        py_Employee.display_bar_chart()
+        # plt.figure(figsize=(cm_to_inch(25), cm_to_inch(15)))
+        # plt.xticks(rotation=0)
+        plt.show()
