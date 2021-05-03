@@ -24,11 +24,7 @@ class Project():
 
     def display_bar_chart(self):
         barG = df.groupby('User').agg({'Billing Amount in INR': 'sum'})
-        return(barG.plot(kind='bar', cmap='Accent', rot=10))
-        # plt.figure(figsize=(15, 4))
-        # plt.bar(list(barG['User']), list(barG['Billing Amount in INR']))
-        # plt.xticks(rotation=0)
-        # plt.show()
+        return(barG.plot(kind='bar', cmap='Accent', rot=10,  figsize=(13, 7), title='Employee vs Billing', fontsize=10))
 
 
 class Employee():
@@ -52,7 +48,7 @@ class Employee():
 
     def display_bar_chart(self):
         barG = df.groupby('Project Name').agg({'Billing Amount in INR': 'sum'})
-        return(barG.plot(kind='bar', cmap='Accent', rot=0))
+        return(barG.plot(kind='bar', cmap='Accent', rot=0, figsize=(13, 7), title='Project vs Billing', fontsize=10))
 
 
 # reading csv file
@@ -137,10 +133,6 @@ def employee_name():
         return(employee_name())
 
 
-def cm_to_inch(value):
-    return value/2.54
-
-
 if __name__ == '__main__':
 
     project_or_employee = project_or_employee_selection()
@@ -177,6 +169,4 @@ if __name__ == '__main__':
               py_Employee.calculate_project_summary())
         print('Employee vs Billing (Bar Graph):')
         py_Employee.display_bar_chart()
-        # plt.figure(figsize=(cm_to_inch(25), cm_to_inch(15)))
-        # plt.xticks(rotation=0)
         plt.show()
